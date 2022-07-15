@@ -108,6 +108,7 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintTop_toTopOf="parent"
                 android:ems="10"
+                android:focusable="false"
                 android:inputType="text"/>
 
             <EditText
@@ -140,7 +141,8 @@
                 android:layout_marginStart="82dp"
                 app:layout_constraintTop_toBottomOf="@+id/et_UserID"
                 android:ems="10"
-                android:inputType="text" />
+                android:maxLength="4"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/et_RouteNbr"
@@ -150,7 +152,8 @@
                 android:layout_marginStart="82dp"
                 app:layout_constraintTop_toBottomOf="@+id/et_LocationNbr"
                 android:ems="10"
-                android:inputType="text" />
+                android:maxLength="2"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/et_Day"
@@ -160,7 +163,8 @@
                 android:layout_marginStart="82dp"
                 app:layout_constraintTop_toBottomOf="@+id/et_RouteNbr"
                 android:ems="10"
-                android:inputType="text" />
+                android:maxLength="1"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/et_Logger"
@@ -180,7 +184,8 @@
                 android:layout_marginStart="82dp"
                 app:layout_constraintTop_toBottomOf="@+id/et_Logger"
                 android:ems="10"
-                android:inputType="text" />
+                android:maxLength="5"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/et_AddtlDesc"
@@ -200,7 +205,7 @@
                 android:layout_marginStart="82dp"
                 app:layout_constraintTop_toBottomOf="@+id/et_AddtlDesc"
                 android:ems="10"
-                android:inputType="text" />
+                android:inputType="number" />
 
             <Button
                 android:id="@+id/btn_Save"

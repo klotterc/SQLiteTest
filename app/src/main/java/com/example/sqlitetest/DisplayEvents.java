@@ -1,5 +1,7 @@
 package com.example.sqlitetest;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Activity;
@@ -15,12 +17,19 @@ import android.view.View;
 
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dblibrary.DBHelper;
+
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class DisplayEvents extends AppCompatActivity {
     private DBHelper mydb ;
@@ -38,10 +47,14 @@ public class DisplayEvents extends AppCompatActivity {
 
     int id_To_Update = 0;
 
+    final Calendar myCalendar = Calendar.getInstance();
+    final
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_contact);
+        Context context = this;
         eventTimeText = (TextView) findViewById(R.id.et_EventTime);;
         hostIDText = (TextView) findViewById(R.id.et_HostID);
         userIDText = (TextView) findViewById(R.id.et_UserID);
@@ -52,6 +65,36 @@ public class DisplayEvents extends AppCompatActivity {
         eventNbrText = (TextView) findViewById(R.id.et_EventNbr);
         addtlDescText = (TextView) findViewById(R.id.et_AddtlDesc);
         addtlNbrText = (TextView) findViewById(R.id.et_AddtlNbr);
+
+
+        TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                myCalendar.set(Calendar.MINUTE, minute);
+                myCalendar.set(Calendar.SECOND, 0);
+                updateLabel();
+            }
+        };
+
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                TimePickerDialog timePicker = new TimePickerDialog(context, time, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), false);
+                timePicker.show();
+            }
+        };
+
+        eventTimeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePicker = new DatePickerDialog(context,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePicker.show();
+            }
+        });
 
         mydb = new DBHelper(this);
 
@@ -124,7 +167,7 @@ public class DisplayEvents extends AppCompatActivity {
                 b.setVisibility(View.INVISIBLE);
 
                 eventTimeText.setText((CharSequence)eventTime);
-                eventTimeText.setFocusable(false);
+                //eventTimeText.setFocusable(false);
                 eventTimeText.setClickable(false);
 
                 hostIDText.setText((CharSequence)hostID);
@@ -170,11 +213,17 @@ public class DisplayEvents extends AppCompatActivity {
         }
     }
 
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy HH:mm:ss a";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);
+        eventTimeText.setText(dateFormat.format(myCalendar.getTime()));
+    }
+
     public void makeEditable() {
         Button b = (Button)findViewById(R.id.btn_Save);
         b.setVisibility(View.VISIBLE);
         eventTimeText.setEnabled(true);
-        eventTimeText.setFocusableInTouchMode(true);
+        //eventTimeText.setFocusableInTouchMode(true);
         eventTimeText.setClickable(true);
 
         hostIDText.setEnabled(true);
@@ -222,13 +271,13 @@ public class DisplayEvents extends AppCompatActivity {
                 if(mydb.updateEvents(id_To_Update,eventTimeText.getText().toString(),
                  hostIDText.getText().toString(),
                  userIDText.getText().toString(),
-                 locationNbrText.getText().toString(),
-                 routeNbrText.getText().toString(),
-                 dayText.getText().toString(),
+                 Integer.parseInt(locationNbrText.getText().toString()),
+                 Integer.parseInt(routeNbrText.getText().toString()),
+                 Integer.parseInt(dayText.getText().toString()),
                  loggerText.getText().toString(),
-                 eventNbrText.getText().toString(),
+                 Integer.parseInt(eventNbrText.getText().toString()),
                  addtlDescText.getText().toString(),
-                 addtlNbrText.getText().toString())){
+                 Integer.parseInt(addtlNbrText.getText().toString()))){
                     Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
@@ -239,13 +288,13 @@ public class DisplayEvents extends AppCompatActivity {
                 if(mydb.insertEvent(eventTimeText.getText().toString(),
                         hostIDText.getText().toString(),
                         userIDText.getText().toString(),
-                        locationNbrText.getText().toString(),
-                        routeNbrText.getText().toString(),
-                        dayText.getText().toString(),
+                        Integer.parseInt(locationNbrText.getText().toString()),
+                        Integer.parseInt(routeNbrText.getText().toString()),
+                        Integer.parseInt(dayText.getText().toString()),
                         loggerText.getText().toString(),
-                        eventNbrText.getText().toString(),
+                        Integer.parseInt(eventNbrText.getText().toString()),
                         addtlDescText.getText().toString(),
-                        addtlNbrText.getText().toString())){
+                        Integer.parseInt(addtlNbrText.getText().toString()))){
                     Toast.makeText(getApplicationContext(), "done",
                             Toast.LENGTH_SHORT).show();
                 } else{
