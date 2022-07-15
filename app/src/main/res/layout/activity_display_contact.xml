@@ -109,6 +109,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:ems="10"
                 android:focusable="false"
+                android:longClickable="false"
                 android:inputType="text"/>
 
             <EditText

@@ -58,12 +58,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         super.onOptionsItemSelected(item);
         switch(item.getItemId()) {
-            case R.id.item1:Bundle dataBundle = new Bundle();
+            case R.id.item1:
+                Bundle dataBundle = new Bundle();
                 dataBundle.putInt("id", 0);
 
                 Intent intent = new Intent(getApplicationContext(), DisplayEvents.class);
                 intent.putExtras(dataBundle);
 
+                startActivity(intent);
+                return true;
+            case R.id.item2:
+                intent = new Intent(getApplicationContext(), XMLActivity.class);
+                intent.putExtra("xml", dbHelper.getDBAsXML());
                 startActivity(intent);
                 return true;
             default:

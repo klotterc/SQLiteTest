@@ -48,13 +48,12 @@ public class DisplayEvents extends AppCompatActivity {
     int id_To_Update = 0;
 
     final Calendar myCalendar = Calendar.getInstance();
-    final
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_contact);
-        Context context = this;
         eventTimeText = (TextView) findViewById(R.id.et_EventTime);;
         hostIDText = (TextView) findViewById(R.id.et_HostID);
         userIDText = (TextView) findViewById(R.id.et_UserID);
@@ -65,36 +64,6 @@ public class DisplayEvents extends AppCompatActivity {
         eventNbrText = (TextView) findViewById(R.id.et_EventNbr);
         addtlDescText = (TextView) findViewById(R.id.et_AddtlDesc);
         addtlNbrText = (TextView) findViewById(R.id.et_AddtlNbr);
-
-
-        TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                myCalendar.set(Calendar.MINUTE, minute);
-                myCalendar.set(Calendar.SECOND, 0);
-                updateLabel();
-            }
-        };
-
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH,month);
-                myCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-                TimePickerDialog timePicker = new TimePickerDialog(context, time, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), false);
-                timePicker.show();
-            }
-        };
-
-        eventTimeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePicker = new DatePickerDialog(context,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH));
-                datePicker.show();
-            }
-        });
 
         mydb = new DBHelper(this);
 
@@ -214,7 +183,7 @@ public class DisplayEvents extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "MM/dd/yy HH:mm:ss a";
+        String myFormat = "MM/dd/yy hh:mm:ss a";
         SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);
         eventTimeText.setText(dateFormat.format(myCalendar.getTime()));
     }
@@ -225,6 +194,25 @@ public class DisplayEvents extends AppCompatActivity {
         eventTimeText.setEnabled(true);
         //eventTimeText.setFocusableInTouchMode(true);
         eventTimeText.setClickable(true);
+
+        TimePickerDialog.OnTimeSetListener time = (view, hourOfDay, minute) -> {
+            myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            myCalendar.set(Calendar.MINUTE, minute);
+            myCalendar.set(Calendar.SECOND, 0);
+            updateLabel();
+        };
+
+        DatePickerDialog.OnDateSetListener date = (view, year, month, dayOfMonth) -> {
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH,month);
+            myCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+            TimePickerDialog timePicker = new TimePickerDialog(context, time, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), false);
+            timePicker.show();
+        };
+        eventTimeText.setOnClickListener(v -> {
+            DatePickerDialog datePicker = new DatePickerDialog(context,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH));
+            datePicker.show();
+        });
 
         hostIDText.setEnabled(true);
         hostIDText.setFocusableInTouchMode(true);
